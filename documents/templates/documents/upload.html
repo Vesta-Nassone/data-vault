@@ -1,0 +1,49 @@
+{% extends "documents/base.html" %}
+{% block title %}Upload Documment or JSON{% endblock %}
+
+{% block content %}
+<h2>Upload Document</h2>
+
+<div role="tablist">
+    <button role="tab" onclick="showTab('json-tab', this)" class="outline secondary" id="tab-json">Submit JSON</button>
+</div>
+
+<!-- JSON Ingest -->
+<div id="json-tab" style="display:none; margin-top: 1rem;">
+    <form hx-post="{% url 'upload-json' %}"
+          hx-target="#upload-result"
+          hx-indicator="#json-spinner">
+        {% csrf_token %}
+        <label>
+            Form Type
+            <select name="form_type" required>
+                <option value="">Select type...</option>
+                <option value="w9">W-9</option>
+                <option value="ach_authorization">ACH Authorization</option>
+                <option value="loan_application">Loan Application</option>
+            </select>
+        </label>
+        <label>
+            JSON Body
+            <textarea name="json_body" rows="12" placeholder='{"original_filename": "data.pdf", "fields": [{"key": "customer_name", "original_value": "John Doe", "data_type": "string", "confidence": 0.95}]}'></textarea>
+        </label>
+        <button type="submit">
+            <span id="json-spinner" class="htmx-indicator">Submitting...</span>
+            <span>Submit JSON</span>
+        </button>
+    </form>
+</div>
+
+<div id="upload-result"></div>
+
+<script>
+function showTab(tabId, btn) {
+    document.getElementById('pdf-tab').style.display = 'none';
+    document.getElementById('json-tab').style.display = 'none';
+    document.getElementById(tabId).style.display = 'block';
+    document.getElementById('tab-pdf').className = 'outline secondary';
+    document.getElementById('tab-json').className = 'outline secondary';
+    btn.className = 'outline';
+}
+</script>
+{% endblock %}
