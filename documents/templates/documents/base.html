@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -53,7 +54,12 @@
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <nav class="container">
       <ul>
-        <li><strong>Data Vault Assessment</strong></li>
+        <li>
+          <img
+            src="{% static 'documents/images/data-vault-logo.png' %}"
+            alt="Data Vault Logo"
+          />
+        </li>
       </ul>
       <ul>
         <li><a href="{% url 'index' %}">Home</a></li>
@@ -68,7 +74,7 @@
             style="display: inline"
           >
             {% csrf_token %}
-            <button type="submit" class="outline">Logout</button>
+            <button type="submit" style="padding: 0.25em 1em !important;margin-bottom: 0 !important;">Logout</button>
           </form>
         </li>
         {% else %}

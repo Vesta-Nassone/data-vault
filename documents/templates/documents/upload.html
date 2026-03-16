@@ -9,8 +9,8 @@
 {% else %}
 
 <div role="tablist">
-    <button role="tab" onclick="showTab('pdf-tab', this)" class="outline" id="tab-pdf">Upload PDF</button>
-    <button role="tab" onclick="showTab('json-tab', this)" class="outline secondary" id="tab-json">Submit JSON</button>
+    <button role="tab" onclick="showTab('pdf-tab', this)" class="outline" id="tab-pdf" style="padding: 0.25em 1em !important;margin-bottom: 0 !important;">Upload PDF</button>
+    <button role="tab" onclick="showTab('json-tab', this)" class="outline secondary" id="tab-json" style="padding: 0.25em 1em !important;margin-bottom: 0 !important;">Submit JSON</button>
 </div>
 
 <!-- PDF Upload -->
@@ -33,8 +33,7 @@
                 <option value="loan_application">Loan Application</option>
             </select>
         </label>
-        <button type="submit">
-            <span id="pdf-spinner" class="htmx-indicator">Uploading...</span>
+        <button type="submit" style="padding: 0.25em 1em !important;margin-bottom: 0 !important;width: auto;">
             <span>Upload PDF</span>
         </button>
     </form>
