@@ -1,0 +1,32 @@
+<tr id="field-{{ field.id }}">
+    <td>{{ field.key }}</td>
+    <td>{{ field.original_value }}</td>
+    <td>
+        {% if field.corrected_value %}
+        <span class="corrected">{{ field.corrected_value }}</span>
+        {% else %}
+        <span style="color: #aaa;">—</span>
+        {% endif %}
+    </td>
+    <td>{{ field.data_type }}</td>
+    <td>
+        {% if field.confidence %}
+        <span class="{% if field.confidence >= 0.8 %}confidence-high{% else %}confidence-low{% endif %}">
+            {{ field.confidence|floatformat:2 }}
+        </span>
+        {% else %}
+        —
+        {% endif %}
+    </td>
+    {% if user.is_authenticated %}
+    <td>
+        <button hx-get="{% url 'field-edit' field.id %}"
+                hx-target="#field-{{ field.id }}"
+                hx-swap="outerHTML"
+                class="outline secondary"
+                style="padding: 0.25em 0.75em; font-size: 0.85em;">
+            Edit
+        </button>
+    </td>
+    {% endif %}
+</tr>
