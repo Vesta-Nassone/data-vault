@@ -5,7 +5,9 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from .models import Document, Field
 from .services import extract_text_from_pdf, parse_fields_from_text
@@ -20,6 +22,10 @@ def index(request):
 def document_detail(request, doc_id):
     document = get_object_or_404(Document, id=doc_id)
     return render(request, "documents/detail.html", {"document": document})
+
+
+def search_page(request):
+    return render(request, "documents/search.html")
 
 
 def upload_page(request):
@@ -139,3 +145,47 @@ def upload_json(request):
         )
 
     return render(request, "documents/partials/upload_result.html", {"document": doc})
+
+
+# HTMX partials — field corrections
+@login_required
+def field_edit_form(request, field_id):
+    field = get_object_or_404(Field, id=field_id)
+    return render(request, "documents/partials/field_edit.html", {"field": field})
+
+
+@login_required
+def field_correct(request, field_id):
+    field = get_object_or_404(Field, id=field_id)
+    field.corrected_value = request.POST.get("corrected_value") or None
+    field.corrected_at = timezone.now()
+    field.corrected_by = request.user
+    field.save()
+    return render(request, "documents/partials/field_row.html", {"field": field})
+
+
+@login_required
+def field_row(request, field_id):
+    field = get_object_or_404(Field, id=field_id)
+    return render(request, "documents/partials/field_row.html", {"field": field})
+
+
+# HTMX partials — search
+def search_results(request):
+    qs = Document.objects.prefetch_related("fields").all()
+
+    if form_type := request.GET.get("form_type"):
+        qs = qs.filter(form_type=form_type)
+    if field_key := request.GET.get("field_key"):
+        qs = qs.filter(fields__key=field_key).distinct()
+    if field_value := request.GET.get("field_value"):
+        qs = qs.filter(
+            Q(fields__original_value__icontains=field_value)
+            | Q(fields__corrected_value__icontains=field_value)
+        ).distinct()
+    if date_from := request.GET.get("date_from"):
+        qs = qs.filter(uploaded_at__gte=date_from)
+    if date_to := request.GET.get("date_to"):
+        qs = qs.filter(uploaded_at__lte=date_to)
+
+    return render(request, "documents/partials/search_results.html", {"documents": qs})
