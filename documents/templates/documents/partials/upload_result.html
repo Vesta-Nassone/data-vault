@@ -1,0 +1,24 @@
+{% if error %}
+<article style="border-left: 4px solid #dc3545">
+  <strong>Error:</strong> {{ error }}
+</article>
+{% elif document %}
+<article style="border-left: 4px solid #28a745">
+  <strong>Success!</strong> Document ingested.
+  <dl>
+    <dt>ID</dt>
+    <dd>{{ document.id }}</dd>
+    <dt>Form Type</dt>
+    <dd>{{ document.form_type }}</dd>
+    <dt>Status</dt>
+    <dd>
+      <span class="badge badge-{{ document.status }}"
+        >{{ document.status }}</span
+      >
+    </dd>
+    <dt>Fields Extracted</dt>
+    <dd>{{ document.fields.count }}</dd>
+  </dl>
+  <a href="{% url 'document-detail' document.id %}">View Document →</a>
+</article>
+{% endif %}
