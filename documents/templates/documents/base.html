@@ -9,6 +9,46 @@
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     />
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+      nav ul li a.active {
+        font-weight: bold;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.15em 0.5em;
+        border-radius: 4px;
+        font-size: 0.8em;
+      }
+      .badge-processed {
+        background: #d4edda;
+        color: #155724;
+      }
+      .badge-processing {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .badge-uploaded {
+        background: #cce5ff;
+        color: #004085;
+      }
+      .badge-error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .confidence-low {
+        color: #856404;
+      }
+      .confidence-high {
+        color: #155724;
+      }
+      #upload-result {
+        margin-top: 1rem;
+      }
+      .corrected {
+        font-style: italic;
+        color: #155724;
+      }
+    </style>
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <nav class="container">
@@ -17,10 +57,11 @@
       </ul>
       <ul>
         <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="{% url 'upload' %}">Upload</a></li>
       </ul>
     </nav>
     <main class="container">
-      <div>Hello World</div>
+      {% block content %}{% endblock %}
     </main>
   </body>
 </html>
