@@ -1,0 +1,18 @@
+{% extends "documents/base.html" %} 
+{% block title %}Login{%endblock %} 
+{% block content %}
+  <article style="max-width: 400px; margin: 2rem auto">
+    <h2>Login</h2>
+    <form method="post">
+      {% csrf_token %} {% for field in form %}
+      <label>
+        {{ field.label }} {{ field }} {% if field.errors %}
+        <small style="color: red">{{ field.errors|join:", " }}</small>
+        {% endif %}
+      </label>
+      {% endfor %}
+      <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+  </article>
+{% endblock %}
