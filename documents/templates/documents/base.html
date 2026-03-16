@@ -58,6 +58,7 @@
       <ul>
         <li><a href="{% url 'index' %}">Home</a></li>
         <li><a href="{% url 'upload' %}">Upload</a></li>
+        <li><a href="{% url 'search' %}">Search</a></li>
         {% if user.is_authenticated %}
         <li><span>{{ user.username }}</span></li>
         <li>
