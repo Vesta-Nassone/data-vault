@@ -4,15 +4,47 @@
 {% block content %}
 <h2>Upload Document</h2>
 
+{% if not user.is_authenticated %}
+<p><a href="{% url 'login' %}">Log in</a> to upload documents.</p>
+{% else %}
+
 <div role="tablist">
+    <button role="tab" onclick="showTab('pdf-tab', this)" class="outline" id="tab-pdf">Upload PDF</button>
     <button role="tab" onclick="showTab('json-tab', this)" class="outline secondary" id="tab-json">Submit JSON</button>
+</div>
+
+<!-- PDF Upload -->
+<div id="pdf-tab" style="margin-top: 1rem;">
+    <form hx-post="{% url 'upload-pdf' %}"
+        hx-encoding="multipart/form-data"
+        hx-target="#upload-result"
+        hx-indicator="#pdf-spinner">
+        {% csrf_token %}
+        <label>
+            PDF File
+            <input type="file" name="file" accept=".pdf" required>
+        </label>
+        <label>
+            Form Type
+            <select name="form_type" required>
+                <option value="">Select type...</option>
+                <option value="w9">W-9</option>
+                <option value="ach_authorization">ACH Authorization</option>
+                <option value="loan_application">Loan Application</option>
+            </select>
+        </label>
+        <button type="submit">
+            <span id="pdf-spinner" class="htmx-indicator">Uploading...</span>
+            <span>Upload PDF</span>
+        </button>
+    </form>
 </div>
 
 <!-- JSON Ingest -->
 <div id="json-tab" style="display:none; margin-top: 1rem;">
     <form hx-post="{% url 'upload-json' %}"
-          hx-target="#upload-result"
-          hx-indicator="#json-spinner">
+        hx-target="#upload-result"
+        hx-indicator="#json-spinner">
         {% csrf_token %}
         <label>
             Form Type
@@ -46,4 +78,6 @@ function showTab(tabId, btn) {
     btn.className = 'outline';
 }
 </script>
+
+{% endif %}
 {% endblock %}

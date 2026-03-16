@@ -1,11 +1,22 @@
 import re
+import fitz  # PyMuPDF
+
+
+def extract_text_from_pdf(file_path: str) -> str:
+    """Extract raw text from a PDF file."""
+    doc = fitz.open(file_path)
+    text = ""
+    for page in doc:
+        text += page.get_text()
+    doc.close()
+    return text
 
 
 def parse_fields_from_text(text: str) -> list[dict]:
     """
     Parse key fields from raw text using regex heuristics.
     Returns list of dicts: {key, original_value, data_type, confidence}
-    
+
     Note: I used AI to generate regex patterns for common fields like customer name, account number, date, etc.
     """
     fields = []
