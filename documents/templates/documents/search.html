@@ -1,0 +1,80 @@
+{% extends "documents/base.html" %} 
+{% block title %}Search Data Vault{%endblock %} 
+{% block content %}
+<h2>Search Documents</h2>
+
+<div id="search-filters">
+  <div class="grid">
+    <label>
+      Form Type
+      <select
+        name="form_type"
+        hx-get="{% url 'search-results' %}"
+        hx-trigger="change"
+        hx-target="#results"
+        hx-include="#search-filters"
+      >
+        <option value="">All types</option>
+        <option value="w9">W-9</option>
+        <option value="ach_authorization">ACH Authorization</option>
+        <option value="loan_application">Loan Application</option>
+      </select>
+    </label>
+
+    <label>
+      Field Key
+      <input
+        name="field_key"
+        type="text"
+        placeholder="e.g. account_number"
+        hx-get="{% url 'search-results' %}"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#results"
+        hx-include="#search-filters"
+      />
+    </label>
+  </div>
+
+  <div class="grid">
+    <label>
+      Field Value
+      <input
+        name="field_value"
+        type="text"
+        placeholder="Search field values..."
+        hx-get="{% url 'search-results' %}"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#results"
+        hx-include="#search-filters"
+      />
+    </label>
+  </div>
+
+  <div class="grid">
+    <label>
+      Uploaded After
+      <input
+        type="date"
+        name="date_from"
+        hx-get="{% url 'search-results' %}"
+        hx-trigger="change"
+        hx-target="#results"
+        hx-include="#search-filters"
+      />
+    </label>
+    <label>
+      Uploaded Before
+      <input
+        type="date"
+        name="date_to"
+        hx-get="{% url 'search-results' %}"
+        hx-trigger="change"
+        hx-target="#results"
+        hx-include="#search-filters"
+      />
+    </label>
+  </div>
+</div>
+
+<div id="results">{% include "documents/partials/search_results.html" %}</div>
+{% endblock %}
