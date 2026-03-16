@@ -1,0 +1,56 @@
+{% extends "documents/base.html" %}
+{% block title %}{{ document.form_type }} - {{ document.original_filename }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>{{ document.original_filename }}</h2>
+    <a href="{% url 'index' %}" class="outline secondary">← Back</a>
+</div>
+
+<article>
+    <dl>
+        <dt>Form Type</dt><dd>{{ document.form_type }}</dd>
+        <dt>Status</dt><dd><span class="badge badge-{{ document.status }}">{{ document.status }}</span></dd>
+        <dt>Content Type</dt><dd>{{ document.content_type }}</dd>
+        <dt>Uploaded</dt><dd>{{ document.uploaded_at|date:"Y-m-d H:i:s" }}</dd>
+        {% if document.uploaded_by %}
+        <dt>Uploaded By</dt><dd>{{ document.uploaded_by.username }}</dd>
+        {% endif %}
+    </dl>
+</article>
+
+<h3>Extracted Fields</h3>
+
+{% if not user.is_authenticated %}
+<p><small><a href="{% url 'login' %}">Log in</a> to edit field corrections.</small></p>
+{% endif %}
+
+{% if document.fields.all %}
+<table>
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Original Value</th>
+            <th>Corrected Value</th>
+            <th>Type</th>
+            <th>Confidence</th>
+            {% if user.is_authenticated %}<th>Actions</th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for field in document.fields.all %}
+            {% include "documents/partials/field_row.html" %}
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No fields extracted for this document.</p>
+{% endif %}
+
+{% if document.raw_text %}
+<details>
+    <summary>Raw Extracted Text</summary>
+    <pre style="white-space: pre-wrap; font-size: 0.8em;">{{ document.raw_text }}</pre>
+</details>
+{% endif %}
+{% endblock %}
